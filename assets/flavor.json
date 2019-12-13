@@ -1,0 +1,28 @@
+{
+    "title": "SauceTV",
+    "author": "SirWhite@DLXstudios.com",
+    "website": "dlxstudios.com",
+    "requireLogin": true,
+    "api": {
+        "baseUrl": "https://us-central1-dlxstudios-f6e64.cloudfunctions.net/"
+    },
+    "theme": {
+        "themeMode": "dark",
+        "fontFamily": "Poppins",
+        "primarySwatch": "{Colors.amber}",
+        "primaryColor": "{Colors.amber}"
+    },
+    "splash": {
+        "text": "SauceTV",
+        "logo": "assets/saucetv_logo.svg"
+    },
+    "pages": [],
+    "plugins": [
+        "settings",
+        "login",
+        "video",
+        "file_local",
+        "file_network",
+        "image_cache"
+    ]
+}
