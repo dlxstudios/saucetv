@@ -22,18 +22,25 @@ class _SauceHomeState extends State<SauceHome> {
   PageController _playlistController;
   List<Playlist> playlists = [];
   int _pageSelected = 0;
+
+  TextEditingController _searchTextController;
+  bool _showSearch = false;
+
+  ///
   @override
   void initState() {
     super.initState();
 
     // playlists = widget.api.playlists;
     // print(playlists.length);
+    _searchTextController = TextEditingController(text: 'Search');
   }
 
   @override
   void dispose() {
     super.dispose();
     widget.mediaController.dispose();
+    _searchTextController.dispose();
   }
 
   void onPlaylistPageViewChange(int value) {
@@ -87,13 +94,59 @@ class _SauceHomeState extends State<SauceHome> {
     _pages.insert(
       0,
       SliverAppBar(
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: SauceSearchDelegate(),
+              );
+            },
+          ),
+        ],
         backgroundColor: Colors.transparent,
         // title: Text('Floating app bar'),
         floating: true,
         flexibleSpace: CustomPaint(
           child: Container(
             // duration: Duration(milliseconds: 300),
-            height: 300,
+            height: 200,
+            // child: Stack(
+            //   children: <Widget>[
+            //     Align(
+            //       alignment: Alignment.topCenter,
+            //       child: _showSearch
+            //           ? Container(
+            //               margin: EdgeInsets.only(top: 40),
+            //               width: 190,
+            //               child: TextField(
+            //                 autocorrect: true,
+            //                 autofocus: true,
+            //                 keyboardType: TextInputType.text,
+            //                 maxLines: 1,
+            //                 controller: _searchTextController,
+            //               ),
+            //             )
+            //           : Container(
+            //               margin: EdgeInsets.only(top: 40),
+            //               child: IconButton(
+            //                 onPressed: () {
+            //                   // setState(() {
+            //                   //   showSearch = !showSearch;
+            //                   // });
+            //                   showSearch(
+            //                     context: context,
+            //                     delegate: SauceSearchDelegate(),
+            //                   );
+            //                 },
+            //                 icon: Icon(Icons.search),
+            //               ),
+            //             ),
+            //     )
+            //   ],
+            // ),
+            margin: EdgeInsets.only(top: 0),
           ),
           painter: SauceDrip(),
         ),
@@ -104,8 +157,54 @@ class _SauceHomeState extends State<SauceHome> {
     return Scaffold(
       body: CustomScrollView(slivers: _pages),
       drawer: SauceMenu(),
-
     );
+  }
+}
+
+class SauceSearchDelegate extends SearchDelegate {
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    if (query.length < 3) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Center(
+            child: Text(
+              "Search term must be longer than two letters.",
+            ),
+          )
+        ],
+      );
+    }
+
+    return null;
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return Column();
   }
 }
 
